@@ -1,0 +1,76 @@
+version: '3'
+services:
+  db:
+    container_name: mysql-server
+    image: mysql:8.0
+    command:
+      - mysqld
+      - --character-set-server=utf8
+      - --collation-server=utf8_bin
+      - --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - ./db:/var/lib/mysql:rw
+    environment:
+      - MYSQL_DATABASE=zabbix
+      - MYSQL_ROOT_PASSWORD=root_pwd
+      - MYSQL_USER=zabbix
+      - MYSQL_PASSWORD=zabbix_pwd
+    networks:
+      - zabbix-net
+    ports:
+      - 3306:3306
+    
+    
+
+  agent:
+    container_name: zabbix_agent
+    image: zabbix/zabbix-agent:5.0.17-centos
+    links:
+    - server:zabbix-server
+    networks:
+      - zabbix-net
+    
+
+  server:
+    container_name: zabbix-server-mysql
+    image: zabbix/zabbix-server-mysql:5.0.17-centos
+    restart: always
+    environment:
+      - DB_SERVER_HOST=mysql-server
+      - MYSQL_DATABASE=zabbix
+      - MYSQL_USER=zabbix
+      - MYSQL_PASSWORD=zabbix_pwd
+      - MYSQL_ROOT_PASSWORD=root_pwd
+    networks:
+      - zabbix-net
+    ports:
+      - 10051:10051
+    depends_on:
+      - db
+
+  
+
+  front:
+    image: zabbix/zabbix-web-apache-mysql:5.0.17-centos
+    restart: always
+    environment:
+      - DB_SERVER_HOST=mysql-server
+      - MYSQL_DATABASE=zabbix
+      - MYSQL_USER=zabbix
+      - MYSQL_PASSWORD=zabbix_pwd
+      - MYSQL_ROOT_PASSWORD=root_pwd
+      - PHP_TZ=America/Argentina/Buenos_Aires
+      - ZBX_SERVER_HOST=zabbix-server-mysql
+    ports:
+      - 80:8080
+    networks:
+      - zabbix-net
+    volumes:
+      - ./front/zabbix:/usr/share/zabbix
+
+
+networks:
+  zabbix-net:
+    external: false
+    name: zabbix-net
