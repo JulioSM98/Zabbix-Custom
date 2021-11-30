@@ -303,7 +303,7 @@ class CScreenProblem extends CScreenBase {
 				: self::getDataProblems($options);
 
 			$end_of_data = (count($problems) < $config['search_limit'] + 1);
-
+			
 			if ($problems) {
 				$eventid_till = end($problems)['eventid'] - 1;
 				$triggerids = [];
@@ -368,7 +368,7 @@ class CScreenProblem extends CScreenBase {
 		while (count($data['problems']) < $config['search_limit'] + 1 && !$end_of_data);
 
 		$data['problems'] = array_slice($data['problems'], 0, $config['search_limit'] + 1, true);
-
+		
 		return $data;
 	}
 
@@ -1091,8 +1091,17 @@ class CScreenProblem extends CScreenBase {
 				$problem_update_link = (new CLink($is_acknowledged ? _('Yes') : _('No')))
 					->addClass($is_acknowledged ? ZBX_STYLE_GREEN : ZBX_STYLE_RED)
 					->addClass(ZBX_STYLE_LINK_ALT)
-					->onClick('acknowledgePopUp('.json_encode(['eventids' => [$problem['eventid']]]).', this);');
+					->onClick('alert("sin permisos");');
 
+				$ack= API::UserGroup()->get([
+				'output' => ['action_ack']]);
+			
+				if($ack[0]['action_ack'] != '1'){
+					$problem_update_link=$problem_update_link->onClick('alert("sin permisos");');
+				}else{
+					$problem_update_link= $problem_update_link->onClick('acknowledgePopUp(' . json_encode(['eventids' => [$problem['eventid']]]) . ', this);');
+				}
+				
 				// Add table row.
 				$table->addRow(array_merge($row, [
 					new CCheckBox('eventids['.$problem['eventid'].']', $problem['eventid']),

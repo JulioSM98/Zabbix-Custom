@@ -894,6 +894,9 @@ define('ACCESS_DENY_PAGE', 1);
 define('GROUP_DEBUG_MODE_DISABLED', 0);
 define('GROUP_DEBUG_MODE_ENABLED',	1);
 
+define('ACTION_ACK_DISABLED', 0);
+define('ACTION_ACK_ENABLED', 1);
+
 define('PERM_READ_WRITE',	3);
 define('PERM_READ',			2);
 define('PERM_DENY',			0);

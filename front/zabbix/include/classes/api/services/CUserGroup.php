@@ -231,6 +231,7 @@ class CUserGroup extends CApiService {
 	 * @return array
 	 */
 	public function update($usrgrps) {
+		// die(var_dump($usrgrps));
 		$this->validateUpdate($usrgrps, $db_usrgrps);
 
 		$upd_usrgrps = [];
@@ -245,6 +246,9 @@ class CUserGroup extends CApiService {
 			}
 			if (array_key_exists('debug_mode', $usrgrp) && $usrgrp['debug_mode'] != $db_usrgrp['debug_mode']) {
 				$upd_usrgrp['debug_mode'] = $usrgrp['debug_mode'];
+			}
+			if (array_key_exists('action_ack', $usrgrp) && $usrgrp['action_ack'] != $db_usrgrp['action_ack']) {
+				$upd_usrgrp['action_ack'] = $usrgrp['action_ack'];
 			}
 			if (array_key_exists('gui_access', $usrgrp) && $usrgrp['gui_access'] != $db_usrgrp['gui_access']) {
 				$upd_usrgrp['gui_access'] = $usrgrp['gui_access'];
@@ -290,6 +294,7 @@ class CUserGroup extends CApiService {
 			'name' =>			['type' => API_STRING_UTF8, 'flags' => API_NOT_EMPTY, 'length' => DB::getFieldLength('usrgrp', 'name')],
 			'debug_mode' =>		['type' => API_INT32, 'in' => implode(',', [GROUP_DEBUG_MODE_DISABLED, GROUP_DEBUG_MODE_ENABLED])],
 			'gui_access' =>		['type' => API_INT32, 'in' => implode(',', [GROUP_GUI_ACCESS_SYSTEM, GROUP_GUI_ACCESS_INTERNAL, GROUP_GUI_ACCESS_LDAP, GROUP_GUI_ACCESS_DISABLED])],
+			'action_ack' =>		['type' => API_INT32, 'in' => implode(',', [ACTION_ACK_DISABLED, ACTION_ACK_ENABLED])],
 			'users_status' =>	['type' => API_INT32, 'in' => implode(',', [GROUP_STATUS_ENABLED, GROUP_STATUS_DISABLED])],
 			'rights' =>			['type' => API_OBJECTS, 'flags' => API_NORMALIZE, 'uniq' => [['id']], 'fields' => [
 				'id' =>				['type' => API_ID, 'flags' => API_REQUIRED],
@@ -308,7 +313,7 @@ class CUserGroup extends CApiService {
 
 		// Check user group names.
 		$db_usrgrps = DB::select('usrgrp', [
-			'output' => ['usrgrpid', 'name', 'debug_mode', 'gui_access', 'users_status'],
+			'output' => ['usrgrpid', 'name', 'debug_mode', 'action_ack' , 'gui_access', 'users_status'],
 			'usrgrpids' => zbx_objectValues($usrgrps, 'usrgrpid'),
 			'preservekeys' => true
 		]);

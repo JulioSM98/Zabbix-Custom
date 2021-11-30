@@ -100,6 +100,12 @@ $form_list->addRow(_('Debug mode'),
 		->setChecked($data['debug_mode'] == GROUP_DEBUG_MODE_ENABLED)
 );
 
+$form_list->addRow(_('Action Acknowledgement'),
+	(new CCheckBox('action_ack', ACTION_ACK_ENABLED))
+	->setUncheckedValue(ACTION_ACK_DISABLED)
+	->setChecked($data['action_ack'] == ACTION_ACK_ENABLED)
+);
+
 $permissions_form_list = new CFormList('permissions_form_list');
 $permissions_form_list->addRow(_('Permissions'),
 	(new CDiv(new CPartial('administration.usergroup.grouprights.html', [

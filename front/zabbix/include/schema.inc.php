@@ -1942,6 +1942,12 @@ return [
 				'type' => DB::FIELD_TYPE_INT,
 				'length' => 10,
 				'default' => '0'
+			],
+			'action_ack' => [
+				'null' => false,
+				'type' => DB::FIELD_TYPE_INT,
+				'length'=>10,
+				'default'=> '0'
 			]
 		]
 	],

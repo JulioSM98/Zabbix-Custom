@@ -39,6 +39,8 @@ class CControllerUsergroupEdit extends CController {
 			'users_status'    => 'db usrgrp.users_status|in '.GROUP_STATUS_ENABLED.','.GROUP_STATUS_DISABLED,
 			'debug_mode'      => 'db usrgrp.debug_mode|in '.GROUP_DEBUG_MODE_ENABLED.','.GROUP_DEBUG_MODE_DISABLED,
 
+			'action_ack'	  => 'db usrgrp.action_ack|in '.ACTION_ACK_ENABLED.','.ACTION_ACK_DISABLED,
+
 			'group_rights'    => 'array',
 			'tag_filters'     => 'array',
 
@@ -64,7 +66,7 @@ class CControllerUsergroupEdit extends CController {
 
 		if ($this->hasInput('usrgrpid')) {
 			$user_groups = API::UserGroup()->get([
-				'output' => ['name', 'gui_access', 'users_status', 'debug_mode'],
+				'output' => ['name', 'gui_access', 'users_status', 'debug_mode', 'action_ack'],
 				'selectTagFilters' => ['groupid', 'tag', 'value'],
 				'usrgrpids' => $this->getInput('usrgrpid'),
 				'editable' => true
@@ -83,12 +85,14 @@ class CControllerUsergroupEdit extends CController {
 	protected function doAction() {
 		// default values
 		$db_defaults = DB::getDefaults('usrgrp');
+		
 		$data = [
 			'usrgrpid' => 0,
 			'name' => $db_defaults['name'],
 			'gui_access' => $db_defaults['gui_access'],
 			'users_status' => $db_defaults['users_status'],
 			'debug_mode' => $db_defaults['debug_mode'],
+			'action_ack'=> $db_defaults['action_ack'],
 			'form_refresh' => 0
 		];
 
@@ -99,10 +103,11 @@ class CControllerUsergroupEdit extends CController {
 			$data['gui_access'] = $this->user_group['gui_access'];
 			$data['users_status'] = $this->user_group['users_status'];
 			$data['debug_mode'] = $this->user_group['debug_mode'];
+			$data['action_ack']= $this->user_group['action_ack'];
 		}
 
 		// overwrite with input variables
-		$this->getInputs($data, ['name', 'gui_access', 'users_status', 'debug_mode', 'form_refresh']);
+		$this->getInputs($data, ['name', 'gui_access', 'users_status', 'debug_mode', 'action_ack' , 'form_refresh']);
 
 		$data['group_rights'] = $this->getGroupRights();
 		$data['new_group_right'] = $this->getInput('new_group_right', []) + [

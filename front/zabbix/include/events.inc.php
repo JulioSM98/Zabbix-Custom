@@ -150,7 +150,9 @@ function get_events_unacknowledged($db_element, $value_trigger = null, $value_ev
 function make_event_details(array $event) {
 	$config = select_config();
 	$is_acknowledged = ($event['acknowledged'] == EVENT_ACKNOWLEDGED);
-
+	$ack = API::UserGroup()->get([
+		'output' => ['action_ack']
+	]);
 	$table = (new CTableInfo())
 		->addRow([
 			_('Event'),
@@ -173,7 +175,7 @@ function make_event_details(array $event) {
 			(new CLink($is_acknowledged ? _('Yes') : _('No')))
 				->addClass($is_acknowledged ? ZBX_STYLE_GREEN : ZBX_STYLE_RED)
 				->addClass(ZBX_STYLE_LINK_ALT)
-				->onClick('acknowledgePopUp('.json_encode(['eventids' => [$event['eventid']]]).', this);')
+				->onClick($ack[0]['action_ack'] != 1 ? 'alert("sin permisos");': 'acknowledgePopUp(' . json_encode(['eventids' => [$event['eventid']]]) . ', this);')
 		]);
 
 	if ($event['r_eventid'] != 0) {
@@ -353,8 +355,18 @@ function make_small_eventlist(array $startEvent) {
 		// Create acknowledge link.
 		$problem_update_link = (new CLink($is_acknowledged ? _('Yes') : _('No')))
 			->addClass($is_acknowledged ? ZBX_STYLE_GREEN : ZBX_STYLE_RED)
-			->addClass(ZBX_STYLE_LINK_ALT)
-			->onClick('acknowledgePopUp('.json_encode(['eventids' => [$event['eventid']]]).', this);');
+			->addClass(ZBX_STYLE_LINK_ALT);
+
+		$ack = API::UserGroup()->get([
+			'output' => ['action_ack']
+		]);
+
+		if ($ack[0]['action_ack'] != '1') {
+			$problem_update_link = $problem_update_link->onClick('alert("sin permisos");');
+		} else {
+			$problem_update_link = $problem_update_link->onClick('acknowledgePopUp(' . json_encode(['eventids' => [$event['eventid']]]) . ', this);');
+		}
+
 
 		$table->addRow([
 			(new CLink(zbx_date2str(DATE_TIME_FORMAT_SECONDS, $event['clock']),
