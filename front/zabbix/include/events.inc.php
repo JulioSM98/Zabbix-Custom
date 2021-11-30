@@ -175,7 +175,7 @@ function make_event_details(array $event) {
 			(new CLink($is_acknowledged ? _('Yes') : _('No')))
 				->addClass($is_acknowledged ? ZBX_STYLE_GREEN : ZBX_STYLE_RED)
 				->addClass(ZBX_STYLE_LINK_ALT)
-				->onClick($ack[0]['action_ack'] != 1 ? 'alert("sin permisos");': 'acknowledgePopUp(' . json_encode(['eventids' => [$event['eventid']]]) . ', this);')
+				->onClick($ack[0]['action_ack'] != 1 ? 'alert("Permission denied");': 'acknowledgePopUp(' . json_encode(['eventids' => [$event['eventid']]]) . ', this);')
 		]);
 
 	if ($event['r_eventid'] != 0) {
@@ -362,7 +362,7 @@ function make_small_eventlist(array $startEvent) {
 		]);
 
 		if ($ack[0]['action_ack'] != '1') {
-			$problem_update_link = $problem_update_link->onClick('alert("sin permisos");');
+			$problem_update_link = $problem_update_link->onClick('alert("Permission denied");');
 		} else {
 			$problem_update_link = $problem_update_link->onClick('acknowledgePopUp(' . json_encode(['eventids' => [$event['eventid']]]) . ', this);');
 		}

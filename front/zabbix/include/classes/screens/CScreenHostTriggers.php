@@ -277,7 +277,7 @@ class CScreenHostTriggers extends CScreenBase {
 			]);
 
 			if ($ack[0]['action_ack'] != '1') {
-				$problem_update_link = $problem_update_link->onClick('alert("sin permisos");');
+				$problem_update_link = $problem_update_link->onClick('alert("Permission denied");');
 			} else {
 				$problem_update_link = $problem_update_link->onClick('acknowledgePopUp(' . json_encode(['eventids' => [$problem['eventid']]]) . ', this);');
 			}

@@ -12297,7 +12297,7 @@ msgstr ""
 #: include/classes/screens/CScreenLldGraph.php:51 include/func.inc.php:1507
 #: items.php:1461 items.php:1660 services.php:84
 msgid "No permissions to referred object or it does not exist!"
-msgstr "¡Sin permisos en el objeto o éste no existe!"
+msgstr "¡Permission denied en el objeto o éste no existe!"
 
 #: include/classes/api/services/CAction.php:1815
 #, c-format

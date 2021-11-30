@@ -1091,13 +1091,13 @@ class CScreenProblem extends CScreenBase {
 				$problem_update_link = (new CLink($is_acknowledged ? _('Yes') : _('No')))
 					->addClass($is_acknowledged ? ZBX_STYLE_GREEN : ZBX_STYLE_RED)
 					->addClass(ZBX_STYLE_LINK_ALT)
-					->onClick('alert("sin permisos");');
+					->onClick('alert("Permission denied");');
 
 				$ack= API::UserGroup()->get([
 				'output' => ['action_ack']]);
 			
 				if($ack[0]['action_ack'] != '1'){
-					$problem_update_link=$problem_update_link->onClick('alert("sin permisos");');
+					$problem_update_link=$problem_update_link->onClick('alert("Permission denied");');
 				}else{
 					$problem_update_link= $problem_update_link->onClick('acknowledgePopUp(' . json_encode(['eventids' => [$problem['eventid']]]) . ', this);');
 				}
