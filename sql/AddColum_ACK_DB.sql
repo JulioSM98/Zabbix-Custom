@@ -1,0 +1,2 @@
+ALTER TABLE `usrgrp `
+ADD COLUMN `action_ack` INT(10) NOT NULL DEFAULT '0';
